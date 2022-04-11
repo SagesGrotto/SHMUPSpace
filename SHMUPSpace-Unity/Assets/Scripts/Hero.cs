@@ -46,8 +46,10 @@ public class Hero : MonoBehaviour
     public float pitchMult = 30;
 
     [Header("Projectile Settings")]
-    public GameObject projectilePrefab; //the game object of the projectile
+    //public GameObject projectilePrefab; //the game object of the projectile
     public float projectileSpeed = 40; //speed of the projectile
+    public AudioClip projectileSound; //sound clip of projectile
+    AudioSource audioSource;//reference to audio source
 
     [Space(10)]
 
@@ -91,6 +93,7 @@ public class Hero : MonoBehaviour
     {
         gm = GameManager.GM; //find the game manager
         pool = ObjectPool.POOL; //find the object pool
+        audioSource = GetComponent<AudioSource>();
     }//end Start()
 
 
@@ -147,8 +150,14 @@ public class Hero : MonoBehaviour
     {
         // GameObject projGo = Instantiate<GameObject>(projectilePrefab);
         GameObject projGo = pool.GetObject();
+
         if (projGo != null)
         {
+            //If there is an audio source
+            if (audioSource != null)
+            {
+                audioSource.PlayOneShot(projectileSound); //play projectileSound
+            }
             projGo.transform.position = transform.position;
             Rigidbody rb = projGo.GetComponent<Rigidbody>();
             rb.velocity = Vector3.up * projectileSpeed;
